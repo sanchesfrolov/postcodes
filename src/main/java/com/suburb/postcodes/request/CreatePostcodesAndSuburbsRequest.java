@@ -6,6 +6,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
-public record CreatePostcodesRequest(
+public record CreatePostcodesAndSuburbsRequest(
         @NotEmpty(message = "Postcode list must contain at least one postcode") List<@Valid PostcodeDTO> postcodes) {
 }

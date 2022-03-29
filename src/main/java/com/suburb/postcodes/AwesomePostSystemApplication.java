@@ -4,10 +4,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class AwesomeSuburbApplication {
+public class AwesomePostSystemApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(AwesomeSuburbApplication.class, args);
+		SpringApplication.run(AwesomePostSystemApplication.class, args);
 	}
-
 }

@@ -2,13 +2,13 @@ package com.suburb.postcodes;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.suburb.postcodes.controller.SuburbController;
+import com.suburb.postcodes.controller.PostSystemController;
 import com.suburb.postcodes.dto.PostcodeDTO;
 import com.suburb.postcodes.dto.SuburbDTO;
-import com.suburb.postcodes.request.CreatePostcodesRequest;
+import com.suburb.postcodes.request.CreatePostcodesAndSuburbsRequest;
 import com.suburb.postcodes.request.SuburbsByPostcodeRangeRequest;
 import com.suburb.postcodes.response.GetSuburbsByPostcodeRangeResponse;
-import com.suburb.postcodes.service.SuburbsService;
+import com.suburb.postcodes.service.PostcodesSuburbsService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,55 +25,57 @@ import java.util.Set;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(SuburbController.class)
-class SuburbControllerTest {
+@WebMvcTest(PostSystemController.class)
+class PostSystemControllerTest {
 
     @MockBean
-    private SuburbsService suburbsService;
+    private PostcodesSuburbsService suburbsService;
 
     @Autowired
     private MockMvc mockMvc;
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
+    private static final String SUBURB_URL = "/postcode";
+
     @Test
-    void testWhenAddSuburbsThenReturnCreatedResponseCode() throws Exception {
-        CreatePostcodesRequest createPostcodesRequest = createPostcodesRequest("Sub1", "0200");
+    void when_AddSuburbs_Then_Return_201_ResponseCode() throws Exception {
+        CreatePostcodesAndSuburbsRequest createPostcodesRequest = createPostcodesRequest("Sub1", "0200");
 
         performPostRequest(createPostcodesRequest, status().isCreated());
 
-        Mockito.verify(suburbsService, Mockito.times(1)).createSuburbs(createPostcodesRequest);
+        Mockito.verify(suburbsService, Mockito.times(1)).createPostcodesAndSuburbs(createPostcodesRequest);
     }
 
     @Test
-    void testWhenAddSuburbsWithWrongPostcodeThenReturnBadRequest() throws Exception {
+    void when_AddSuburbsWithWrongPostcode_Then_Return_400_ResponseCode() throws Exception {
         String wrongPostcode = "02001";
-        CreatePostcodesRequest createPostcodesRequest = createPostcodesRequest("Sub1", wrongPostcode);
+        CreatePostcodesAndSuburbsRequest createPostcodesRequest = createPostcodesRequest("Sub1", wrongPostcode);
 
         performPostRequest(createPostcodesRequest, status().isBadRequest());
 
-        Mockito.verify(suburbsService, Mockito.times(0)).createSuburbs(createPostcodesRequest);
+        Mockito.verify(suburbsService, Mockito.times(0)).createPostcodesAndSuburbs(createPostcodesRequest);
     }
 
     @Test
-    void testWhenAddSuburbsWithEmptySuburbThenReturnBadRequest() throws Exception {
+    void when_AddSuburbsWithEmptySuburbName_Then_Return_400_ResponseCode() throws Exception {
         String wrongSuburbName = "";
-        CreatePostcodesRequest createPostcodesRequest = createPostcodesRequest(wrongSuburbName, "0200");
+        CreatePostcodesAndSuburbsRequest createPostcodesRequest = createPostcodesRequest(wrongSuburbName, "0200");
 
         performPostRequest(createPostcodesRequest, status().isBadRequest());
 
-        Mockito.verify(suburbsService, Mockito.times(0)).createSuburbs(createPostcodesRequest);
+        Mockito.verify(suburbsService, Mockito.times(0)).createPostcodesAndSuburbs(createPostcodesRequest);
     }
 
     @Test
-    void testWhenAddSuburbsWithEmptyPayload() throws Exception {
+    void when_AddSuburbsWithEmptyPayload_Then_Return_400_ResponseCode() throws Exception {
         performPostRequest("{}", status().isBadRequest());
 
-        Mockito.verify(suburbsService, Mockito.times(0)).createSuburbs(Mockito.any(CreatePostcodesRequest.class));
+        Mockito.verify(suburbsService, Mockito.times(0)).createPostcodesAndSuburbs(Mockito.any(CreatePostcodesAndSuburbsRequest.class));
     }
 
     @Test
-    void testWhenGetSuburbsByPostcodesWithCorrectRangeThenReturnCorrectResponse() throws Exception {
+    void when_GetSuburbsByPostcodesWithCorrectPostCodeRange_Then_Return_200_ResponseCode() throws Exception {
         SuburbsByPostcodeRangeRequest suburbsByPostcodeRangeRequest = new SuburbsByPostcodeRangeRequest("0200", "1000");
         SuburbDTO sub1 = new SuburbDTO("Sub1");
         SuburbDTO sub2 = new SuburbDTO("Sub2");
@@ -84,7 +86,7 @@ class SuburbControllerTest {
         Mockito.when(suburbsService.getSuburbsByPostcodeRange(suburbsByPostcodeRangeRequest)).thenReturn(getSuburbsByPostcodeRangeResponse);
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/suburb")
+                        .get(SUBURB_URL)
                         .content(asJsonString(suburbsByPostcodeRangeRequest))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -95,12 +97,12 @@ class SuburbControllerTest {
     }
 
     @Test
-    void testWhenGetSuburbsByPostcodesWithWrongRangeThenReturnBadRequest() throws Exception {
+    void when_GetSuburbsByPostcodesWithWrongPostCodeRange_Then_Return_400_ResponseCode() throws Exception {
         String wrongPostcodeParameter = "020";
         SuburbsByPostcodeRangeRequest suburbsByPostcodeRangeRequest = new SuburbsByPostcodeRangeRequest(wrongPostcodeParameter, "1000");
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/suburb")
+                        .get(SUBURB_URL)
                         .content(asJsonString(suburbsByPostcodeRangeRequest))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -111,18 +113,17 @@ class SuburbControllerTest {
 
     private void performPostRequest(Object createPostcodesRequest, ResultMatcher resultMatcher) throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
-                        .post("/suburb")
+                        .post(SUBURB_URL)
                         .content(asJsonString(createPostcodesRequest))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(resultMatcher);
     }
 
-
-    private CreatePostcodesRequest createPostcodesRequest(String suburbName, String postCode) {
+    private CreatePostcodesAndSuburbsRequest createPostcodesRequest(String suburbName, String postCode) {
         SuburbDTO suburbDTO1 = new SuburbDTO(suburbName);
         PostcodeDTO postcodeDTO1 = new PostcodeDTO(postCode, Set.of(suburbDTO1));
-        return new CreatePostcodesRequest(List.of(postcodeDTO1));
+        return new CreatePostcodesAndSuburbsRequest(List.of(postcodeDTO1));
     }
 
     private String asJsonString(final Object obj) throws JsonProcessingException {

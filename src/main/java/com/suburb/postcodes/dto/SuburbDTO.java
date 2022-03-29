@@ -1,6 +1,5 @@
 package com.suburb.postcodes.dto;
 
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
 public record SuburbDTO(

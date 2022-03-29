@@ -1,7 +1,7 @@
 # Awesome postcode system
 
 ## Project description
-Simple test system for managing AU postcodes.<br>
+Simple system for managing AU postcodes and suburbs.<br>
 System has following features:
 - add new postcode in conjunction with suburbs
 - get a sorted suburb name list as well as the total number of characters of all names combined
@@ -16,18 +16,25 @@ System has following features:
 - swagger
 - docker(gradle plugin)
 
-
-## Build and test
+## Build and test without docker images building
 gradle build -x bootBuildImage
 
-## Build, test app and build images
+## Build, test app and build docker images
 gradle build
 
-## Start app
+## Start only postgresql
 docker-compose up -d --build
 
-## Stop app
-docker-compose down
+## Start app and postgresql
+docker-compose --profile full  up -d --build
 
-## Swagger
-{host:port}/swagger-ui.html
+## Stop containers app and delete volumes
+docker-compose down -v
+
+## testing idea
+
+### Swagger
+http://localhost:8080/swagger-ui/index.html
+
+### Postman
+- Please use postcodes.postman_collection.json file from project root directory

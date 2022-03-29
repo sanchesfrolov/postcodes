@@ -1,0 +1,71 @@
+{
+	"info": {
+		"_postman_id": "c0979da3-f103-4bb3-8257-0ad842d86b25",
+		"name": "postcodes",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "CreateSuburb",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"postcodes\": [\r\n        {\r\n            \"code\": \"1002\",\r\n            \"suburbs\": [\r\n                {\"suburbName\": \"AS70\"},\r\n                {\"suburbName\": \"AS71\"}\r\n            ]\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/suburb",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"suburb"
+					]
+				},
+				"description": "{    \"suburbs\": \\[        {            \"suburbName\": \"S1\",            \"postcodes\": \\[                {                    \"code\": \"02001\"                },                {                    \"code\": \"0201\"                }            \\]        }    \\]}"
+			},
+			"response": []
+		},
+		{
+			"name": "GetSuburb",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"from\": \"0200\",\r\n  \"to\": \"9999\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:8080/postcode",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"postcode"
+					]
+				},
+				"description": "{    \"suburbs\": \\[        {            \"suburbName\": \"S1\",            \"postcodes\": \\[                {                    \"code\": \"02001\"                },                {                    \"code\": \"0201\"                }            \\]        }    \\]}"
+			},
+			"response": []
+		}
+	]
+}

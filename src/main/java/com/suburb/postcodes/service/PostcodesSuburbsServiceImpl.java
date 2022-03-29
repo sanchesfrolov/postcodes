@@ -6,7 +6,7 @@ import com.suburb.postcodes.entity.Postcode;
 import com.suburb.postcodes.entity.Suburb;
 import com.suburb.postcodes.repository.PostcodeRepository;
 import com.suburb.postcodes.repository.SuburbRepository;
-import com.suburb.postcodes.request.CreatePostcodesRequest;
+import com.suburb.postcodes.request.CreatePostcodesAndSuburbsRequest;
 import com.suburb.postcodes.request.SuburbsByPostcodeRangeRequest;
 import com.suburb.postcodes.response.GetSuburbsByPostcodeRangeResponse;
 import lombok.RequiredArgsConstructor;
@@ -22,14 +22,14 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class SuburbsServiceImpl implements SuburbsService {
+public class PostcodesSuburbsServiceImpl implements PostcodesSuburbsService {
 
     private final SuburbRepository suburbRepository;
     private final PostcodeRepository postcodeRepository;
 
     @Override
     @Transactional
-    public void createSuburbs(CreatePostcodesRequest suburbsRequest) {
+    public void createPostcodesAndSuburbs(CreatePostcodesAndSuburbsRequest suburbsRequest) {
         addPostcodesIfDoesNotExist(suburbsRequest
                 .postcodes()
                 .stream()

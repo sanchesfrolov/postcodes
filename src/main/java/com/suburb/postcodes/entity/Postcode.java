@@ -4,12 +4,12 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
 @Getter
 @Setter
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "postcode")
@@ -32,4 +32,19 @@ public class Postcode {
             joinColumns = @JoinColumn(name = "postcode_id"),
             inverseJoinColumns = @JoinColumn(name = "suburb_id"))
     private Set<Suburb> suburbs = new HashSet<>();
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Postcode postcode = (Postcode) o;
+        return code.equals(postcode.code);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(code);
+    }
+
+
 }
