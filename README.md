@@ -31,7 +31,7 @@ docker-compose --profile full  up -d --build
 ## Stop containers app and delete volumes
 docker-compose down -v
 
-## testing idea
+## Testing idea:
 
 ### Swagger
 http://localhost:8080/swagger-ui/index.html
