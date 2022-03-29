@@ -33,8 +33,8 @@ docker-compose down -v
 
 ## Testing idea:
 
-### Swagger
+- Swagger<br>
 http://localhost:8080/swagger-ui/index.html
 
-### Postman
-- Please use postcodes.postman_collection.json file from project root directory
+- Postman<br> 
+Please use postcodes.postman_collection.json file from project root directory
